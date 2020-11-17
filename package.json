@@ -20,5 +20,8 @@
   "devDependencies": {
     "parcel": "^2.0.0-nightly.447",
     "sass": "^1.29.0"
+  },
+  "dependencies": {
+    "axios": "^0.21.0"
   }
 }

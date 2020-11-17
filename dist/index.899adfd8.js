@@ -425,7 +425,42 @@ function hmrAcceptRun(bundle, id) {
 
   acceptedAssets[id] = true;
 }
+},{}],"4iKEs":[function(require,module,exports) {
+require('./bundle-manifest').register(JSON.parse("{\"4bEJ3\":\"index.899adfd8.js\",\"674lE\":\"icons.c8e35105.svg\"}"));
+},{"./bundle-manifest":"5G1rV"}],"5G1rV":[function(require,module,exports) {
+"use strict";
+
+var mapping = {};
+
+function register(pairs) {
+  var keys = Object.keys(pairs);
+
+  for (var i = 0; i < keys.length; i++) {
+    mapping[keys[i]] = pairs[keys[i]];
+  }
+}
+
+function resolve(id) {
+  var resolved = mapping[id];
+
+  if (resolved == null) {
+    throw new Error('Could not resolve bundle with id ' + id);
+  }
+
+  return resolved;
+}
+
+module.exports.register = register;
+module.exports.resolve = resolve;
 },{}],"I5Uh7":[function(require,module,exports) {
+"use strict";
+
+var _icons = _interopRequireDefault(require("url:../img/icons.svg"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+// import icons from '../img/icons.svg';
+console.log(_icons.default);
 const recipeContainer = document.querySelector('.recipe');
 
 const timeout = function (s) {
@@ -436,6 +471,247 @@ const timeout = function (s) {
   });
 }; // https://forkify-api.herokuapp.com/v2
 ///////////////////////////////////////
-},{}]},{},["6GPhY","I5Uh7"], "I5Uh7", "parcelRequire5bf6")
+
+
+const renderSpinner = function (paremtEl) {
+  const markup = `
+  <div class="spinner">
+  <svg>
+   <use href="${_icons.default}#icon-loader"></use>
+   </svg>
+   </div>
+  `;
+  paremtEl.innerHTML = "";
+  paremtEl.insertAdjacentHTML('afterbegin', markup);
+};
+
+const showRecipe = async function () {
+  try {
+    renderSpinner(recipeContainer);
+    const res = await fetch('https://forkify-api.herokuapp.com/api/v2/recipes/5ed6604591c37cdc054bc886');
+    const data = await res.json();
+    if (!res.ok) throw new Error(`${data.message}  (${res.status})`);
+    console.log(res, data);
+    let {
+      recipe
+    } = data.data;
+    recipe = {
+      id: recipe.id,
+      title: recipe.title,
+      publisher: recipe.publisher,
+      sourceUrl: recipe.source_url,
+      image: recipe.image_url,
+      servings: recipe.servings,
+      cookingTime: recipe.cooking_time,
+      ingredients: recipe.ingredients
+    }, console.log(recipe);
+    const markup = ` 
+      <figure class="recipe__fig">
+      <img src="${recipe.image}" alt="Tomato" class="recipe__img" />
+      <h1 class="recipe__title">
+        <span>${recipe.title}</span>
+      </h1>
+    </figure>
+
+    <div class="recipe__details">
+      <div class="recipe__info">
+        <svg class="recipe__info-icon">
+          <use href="${_icons.default}#icon-clock"></use>
+        </svg>
+        <span class="recipe__info-data recipe__info-data--minutes">${recipe.cookingTime}</span>
+        <span class="recipe__info-text">minutes</span>
+
+      </div>
+      <div class="recipe__info">
+        <svg class="recipe__info-icon">
+          <use href="${_icons.default}#icon-users"></use>
+        </svg>
+        <span class="recipe__info-data recipe__info-data--people">${recipe.servings}</span>
+        <span class="recipe__info-text">servings</span>
+        <div class="recipe__info-buttons">
+          <button class="btn--tiny btn--increase-servings">
+            <svg>
+              <use href="src/img/icons.svg#icon-minus-circle"></use>
+            </svg>
+          </button>
+          <button class="btn--tiny btn--increase-servings">
+            <svg>
+              <use href="src/img/icons.svg#icon-plus-circle"></use>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="recipe__user-generated">
+        <svg>
+          <use href="src/img/icons.svg#icon-user"></use>
+        </svg>
+      </div>
+      <button class="btn--round">
+        <svg class="">
+          <use href="src/img/icons.svg#icon-bookmark-fill"></use>
+        </svg>
+      </button>
+    </div>
+    <div class="recipe__ingredients">
+      <h2 class="heading--2">Recipe ingredients</h2>
+      <ul class="recipe__ingredient-list">
+
+        ${recipe.ingredients.map(ing => {
+      return `
+          <li class="recipe__ingredient">
+          <svg class="recipe__icon">
+            <use href="src/img/icons.svg#icon-check"></use>
+          </svg>
+          <div class="recipe__quantity">${ing.quantity}</div>
+          <div class="recipe__description">
+            <span class="recipe__unit">${ing.unit}</span>
+            ${ing.ingredient}
+          </div>
+        </li>
+          `;
+    }).join('')}
+     </div>
+
+       
+    <div class="recipe__directions">
+      <h2 class="heading--2">How to cook it</h2>
+      <p class="recipe__directions-text">
+        This recipe was carefully designed and tested by
+        <span class="recipe__publisher">${recipe.publisher}</span>. Please check out
+        directions at their website.
+      </p>
+      <a
+        class="btn--small recipe__btn"
+        href="${recipe.sourceUrl}"
+        target="_blank"
+      >
+        <span>Directions</span>
+        <svg class="search__icon">
+          <use href="src/img/icons.svg#icon-arrow-right"></use>
+        </svg>
+      </a>
+    </div>`;
+    recipeContainer.innerHTML = "";
+    recipeContainer.insertAdjacentHTML('afterbegin', markup);
+  } catch (err) {
+    alert(err);
+  }
+};
+
+showRecipe();
+},{"url:../img/icons.svg":"7wuzf"}],"7wuzf":[function(require,module,exports) {
+module.exports = require('./bundle-url').getBundleURL() + require('./relative-path')("4bEJ3", "674lE");
+},{"./bundle-url":"10N7P","./relative-path":"Q4PMS"}],"10N7P":[function(require,module,exports) {
+"use strict";
+
+/* globals document:readonly */
+var bundleURL = null;
+
+function getBundleURLCached() {
+  if (!bundleURL) {
+    bundleURL = getBundleURL();
+  }
+
+  return bundleURL;
+}
+
+function getBundleURL() {
+  try {
+    throw new Error();
+  } catch (err) {
+    var matches = ('' + err.stack).match(/(https?|file|ftp):\/\/[^)\n]+/g);
+
+    if (matches) {
+      return getBaseURL(matches[0]);
+    }
+  }
+
+  return '/';
+}
+
+function getBaseURL(url) {
+  return ('' + url).replace(/^((?:https?|file|ftp):\/\/.+)\/[^/]+$/, '$1') + '/';
+} // TODO: Replace uses with `new URL(url).origin` when ie11 is no longer supported.
+
+
+function getOrigin(url) {
+  let matches = ('' + url).match(/(https?|file|ftp):\/\/[^/]+/);
+
+  if (!matches) {
+    throw new Error('Origin not found');
+  }
+
+  return matches[0];
+}
+
+exports.getBundleURL = getBundleURLCached;
+exports.getBaseURL = getBaseURL;
+exports.getOrigin = getOrigin;
+},{}],"Q4PMS":[function(require,module,exports) {
+"use strict";
+
+var resolve = require('./bundle-manifest').resolve;
+
+module.exports = function (fromId, toId) {
+  return relative(dirname(resolve(fromId)), resolve(toId));
+};
+
+function dirname(_filePath) {
+  if (_filePath === '') {
+    return '.';
+  }
+
+  var filePath = _filePath[_filePath.length - 1] === '/' ? _filePath.slice(0, _filePath.length - 1) : _filePath;
+  var slashIndex = filePath.lastIndexOf('/');
+  return slashIndex === -1 ? '.' : filePath.slice(0, slashIndex);
+}
+
+function relative(from, to) {
+  if (from === to) {
+    return '';
+  }
+
+  var fromParts = from.split('/');
+
+  if (fromParts[0] === '.') {
+    fromParts.shift();
+  }
+
+  var toParts = to.split('/');
+
+  if (toParts[0] === '.') {
+    toParts.shift();
+  } // Find where path segments diverge.
+
+
+  var i;
+  var divergeIndex;
+
+  for (i = 0; (i < toParts.length || i < fromParts.length) && divergeIndex == null; i++) {
+    if (fromParts[i] !== toParts[i]) {
+      divergeIndex = i;
+    }
+  } // If there are segments from "from" beyond the point of divergence,
+  // return back up the path to that point using "..".
+
+
+  var parts = [];
+
+  for (i = 0; i < fromParts.length - divergeIndex; i++) {
+    parts.push('..');
+  } // If there are segments from "to" beyond the point of divergence,
+  // continue using the remaining segments.
+
+
+  if (toParts.length > divergeIndex) {
+    parts.push.apply(parts, toParts.slice(divergeIndex));
+  }
+
+  return parts.join('/');
+}
+
+module.exports._dirname = dirname;
+module.exports._relative = relative;
+},{"./bundle-manifest":"5G1rV"}]},{},["6GPhY","4iKEs","I5Uh7"], "I5Uh7", "parcelRequire5bf6")
 
 //# sourceMappingURL=index.899adfd8.js.map
