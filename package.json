@@ -1,0 +1,24 @@
+{
+  "name": "foodrecipes",
+  "version": "1.0.0",
+  "description": "Recipe app",
+  "main": "index.html",
+  "scripts": {
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zpallday/foodRecipes.git"
+  },
+  "author": "Zach",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zpallday/foodRecipes/issues"
+  },
+  "homepage": "https://github.com/zpallday/foodRecipes#readme",
+  "devDependencies": {
+    "parcel": "^2.0.0-nightly.447",
+    "sass": "^1.29.0"
+  }
+}
